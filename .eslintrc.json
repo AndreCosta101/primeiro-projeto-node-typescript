@@ -30,7 +30,9 @@
             }
         ],
         "prettier/prettier": "error",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        // "@typescript-eslint-disable": true
+        "@typescript-eslint/camelcase": "off"
     },
     "settings": {
         "import/resolver": {
