@@ -29,12 +29,14 @@ export default function ensureAuthenticated(
 
     const { sub } = decoded as TokenPayload;
 
+    // Colocando user na request
+    // tipagem de user na request add na src/@types/express.d.ts
     request.user = {
       id: sub,
     };
 
     return next();
-  } catch {
+  } catch (err) {
     throw new Error('Invalid JWT token');
   }
 }
