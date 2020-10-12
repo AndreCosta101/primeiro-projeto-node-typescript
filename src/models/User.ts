@@ -21,6 +21,9 @@ class User {
   @Column() // passando vazio, ele usa varchar
   password: string;
 
+  @Column() // passando vazio, ele usa varchar
+  avatar: string;
+
   @CreateDateColumn()
   created_at: Date;
 
