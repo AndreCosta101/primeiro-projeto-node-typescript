@@ -1,11 +1,8 @@
-import path from 'path';
-import fs from 'fs';
-
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
-import uploadConfig from '../../../config/upload';
 
 import User from '../infra/typeorm/entities/User';
 
@@ -19,6 +16,9 @@ class UpdateUserAvatarService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
   ) { }
 
   public async execute({ user_id, avatarFilename }: IRequest): Promise<User> {
@@ -29,20 +29,12 @@ class UpdateUserAvatarService {
     }
 
     if (user.avatar) {
-      // path.join junta dois caminhos: o diretorio da uploadConfig e o user.avatar
-      const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
-      // fs = file system do node
-      // fs.promises = uso o filesystem como promise
-      // fs.promises.stat = verifica o status do arquivo, mas SÓ se ele existir
-      const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
-
-      if (userAvatarFileExists) {
-        // deleta o arquivo
-        await fs.promises.unlink(userAvatarFilePath);
-      }
+      await this.storageProvider.deleteFile(user.avatar);
     }
+
+    const filename = await this.storageProvider.saveFile(avatarFilename);
     // coloca o novo avatar no user
-    user.avatar = avatarFilename;
+    user.avatar = filename;
     // salva o user no banco
     await this.usersRepository.save(user);
 
