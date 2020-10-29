@@ -19,6 +19,7 @@ Requisitos da parte técnica. Qual lib, qual banco etc.-->
 
 **Regras de Negócio**
 
+- 
 - O link enviado por email para resetar senha, deve expirar em 2h;
 - O usuário precisa confirmar a nova senha ao resetar sua senha;
 
