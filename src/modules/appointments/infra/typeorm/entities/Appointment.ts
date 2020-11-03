@@ -30,6 +30,14 @@ class Appointment {
   @JoinColumn({ name: 'provider_id' })
   provider: User;
 
+  @Column() // passando vazio, ele usa varchar
+  user_id: string;
+
+  // a referência do relacionamento é o Appointment, portanto ManyToOne
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
   @Column('timestamp with time zone')
   date: Date;
 
